@@ -38,6 +38,13 @@ include_directories ("${PROJECT_SOURCE_DIR}/picojson")
 add_subdirectory(picojson)
 set (EXTRA_LIBS ${EXTRA_LIBS} picoFunctions)
 
+include_directories ("${PROJECT_SOURCE_DIR}/drv8830")
+add_subdirectory(drv8830)
+set (EXTRA_LIBS ${EXTRA_LIBS} drv8830Functions)
+
+
 target_link_libraries(wifiMotor
+  wiringPi
+  wiringPiDev
   ${EXTRA_LIBS}
 )

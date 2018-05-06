@@ -4,6 +4,7 @@
 int main()
 {
   jsonReader * json = new jsonReader();
+  lib_drv8830 * motor=new lib_drv8830();
   
   int sock0;
   struct sockaddr_in addr;
@@ -80,7 +81,27 @@ int main()
 
     //データ送信送信
     send(sock, sendBuffer, sizeof(char)*strlen(sendBuffer), 0);
+    enum DriveMode modeDrive;
 
+    switch(valueInt){
+    case 0:
+      modeDrive=Stanby;
+      break;
+    case 1:
+      modeDrive=NegativeDrive;
+      break;
+    case 2:
+      modeDrive=PositiveDrive;
+      break;
+    case 3:
+      modeDrive=Break;
+      break;
+    }
+    //モータードライブ実行
+    motor->motorDrive(0,modeDrive,valueDouble);
+
+    
+    
   }
 
   //ソケットクローズ
