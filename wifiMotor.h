@@ -7,7 +7,8 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <unistd.h>
-#include "picojson.h"
 #include "jsonReader.h"
+
+#define SOCKET_PORT 2001//受信ポート番号の指定
 
 #endif
