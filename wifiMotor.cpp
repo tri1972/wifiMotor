@@ -73,7 +73,10 @@ int main()
     std::string keyInt("Mode");
     int valueInt = json->readDouble(jsonStr,keyInt);
 
-    printf("mode=%d Voltage=%f\n",valueInt,valueDouble);
+    std::string keyIntMotor("MotorNumber");
+    int valueMotor = json->readDouble(jsonStr,keyIntMotor);
+
+    printf("motorNumber=%d mode=%d Voltage=%f\n",valueMotor,valueInt,valueDouble);
 
     
     //送信データをセット
@@ -88,17 +91,17 @@ int main()
       modeDrive=Stanby;
       break;
     case 1:
-      modeDrive=NegativeDrive;
-      break;
-    case 2:
       modeDrive=PositiveDrive;
       break;
     case 3:
+      modeDrive=NegativeDrive;
+      break;
+    case 2:
       modeDrive=Break;
       break;
     }
     //モータードライブ実行
-    motor->motorDrive(0,modeDrive,valueDouble);
+    motor->motorDrive(valueMotor,modeDrive,valueDouble);
 
     
     
