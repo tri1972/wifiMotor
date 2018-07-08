@@ -1,0 +1,16 @@
+
+[Unit]
+Description=wifiMotor
+After=dhcpcd.service smbd.service
+
+[Service]
+Type=forking
+user=root
+# WorkingDirectory=/usr/local/bin/wifiMotor
+PIDFile=/var/run/wifiMotor.pid
+Restart=on-success
+ExecStart=/usr/local/bin/wifiMotor
+ExecStop=/bin/kill -SIGTERM $PIDFile
+
+[Install]
+WantedBy=multi-user.target

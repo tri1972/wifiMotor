@@ -16,6 +16,7 @@ int main()
   int yes = 1;
   char recvBuffer[256];
   char sendBuffer[256];
+  char strBuffer[256];
 
   /* syslog オープン*/
   openlog("wifiMotor", LOG_PID, LOG_DAEMON);
@@ -58,8 +59,6 @@ int main()
     perror("listen");
     return -1;
   }
-
-  char strBuffer[256];
 
   //daemonループの開始
   syslog(LOG_NOTICE, "wifiMotorLoop  started.");

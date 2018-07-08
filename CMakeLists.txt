@@ -51,3 +51,16 @@ target_link_libraries(wifiMotor
   wiringPiDev
   ${EXTRA_LIBS}
 )
+#### インストールターゲットを追加
+# CMAKE_INSTALL_PREFIX (default=/usr/local)以下に install される
+install (TARGETS wifiMotor DESTINATION bin)
+install (FILES "${PROJECT_SOURCE_DIR}/wifiMotor.h"
+  DESTINATION include)
+install (FILES "${PROJECT_SOURCE_DIR}/daemonize/daemonize.h"
+  DESTINATION include)
+install (FILES "${PROJECT_SOURCE_DIR}/drv8830/lib_drv8830.h"
+  DESTINATION include)
+install (FILES "${PROJECT_SOURCE_DIR}/picojson/picojson.h"
+  DESTINATION include)
+install (FILES "${PROJECT_SOURCE_DIR}/wifiMotor.service"
+  DESTINATION /etc/systemd/system/)
