@@ -1,23 +1,25 @@
-#ifdef __cplusplus__
-extern "C" {
-    #endif
+#ifndef DAEMONIZE
+#define DAEMONIZE
 
-  /*!
-   * create a typical daemon process.
-   *
-   * @param [in] pidfilepath      The pid file pathname.
-   *                              If NULL, it will never record.
-   * @param [in] syslog_ident     syslog ident.
-   * @param [in] syslog_option    syslog option.
-   * @param [in] syslog_facility  syslog facility.
-   * @return this function        1:a daemon created, 0: error
-   */
-  int daemonize(
-		const char* pidfilepath,
-		const char *syslog_ident,
-		int syslog_option,
-		int syslog_facility);
+#include <stdio.h>
+#include <unistd.h>
+#include <stdarg.h>
+#include <signal.h>
+#include <syslog.h>
 
-    #ifdef __cplusplus__
-}
+
+class daemonize
+{
+private:
+public:
+  static int daemonized;
+  static int daemonizing(
+	      const char* pidfilepath,
+	      const char *syslog_ident,
+	      int syslog_option,
+	      int syslog_facility);
+
+};
+
+
 #endif

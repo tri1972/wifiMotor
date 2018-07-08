@@ -1,5 +1,5 @@
 # メインライブラリを追加
-add_library(daemonizeFunctions daemonize.c)
+add_library(daemonizeFunctions daemonize.cpp)
 
 # インストール
 install (TARGETS daemonizeFunctions DESTINATION bin)

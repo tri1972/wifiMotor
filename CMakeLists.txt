@@ -42,6 +42,9 @@ include_directories ("${PROJECT_SOURCE_DIR}/drv8830")
 add_subdirectory(drv8830)
 set (EXTRA_LIBS ${EXTRA_LIBS} drv8830Functions)
 
+include_directories ("${PROJECT_SOURCE_DIR}/daemonize")
+add_subdirectory (daemonize)
+set (EXTRA_LIBS ${EXTRA_LIBS} daemonizeFunctions)
 
 target_link_libraries(wifiMotor
   wiringPi

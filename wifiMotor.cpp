@@ -1,5 +1,7 @@
 #include "wifiMotor.h"
 
+static volatile int sigterm = 0;
+static void handle_sigterm(int sig) { sigterm = 1; }
 
 int main()
 {
@@ -15,6 +17,20 @@ int main()
   char recvBuffer[256];
   char sendBuffer[256];
 
+  /* syslog オープン*/
+  openlog("wifiMotor", LOG_PID, LOG_DAEMON);
+  syslog(LOG_NOTICE,"start wifiMotor.");
+  
+  //daemon化初期化
+  char* const pathpid="/var/run/wifiMotor.pid";
+  char* const id="wifiMotor";
+  if(!daemonize::daemonizing(pathpid,id, (int)LOG_PID, (int)LOG_DAEMON))
+    {
+      syslog(LOG_ERR,"failed to daemonize.");
+      //fprintf(stderr, "failed to daemonize.\n");
+      return 2; // fail to start daemon
+    }
+    
   //ソケット作成
   sock0 = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -43,9 +59,13 @@ int main()
     return -1;
   }
 
+  char strBuffer[256];
 
+  //daemonループの開始
+  syslog(LOG_NOTICE, "wifiMotorLoop  started.");
+  signal(SIGTERM, handle_sigterm); 
   //接続要求待ちループ
-  while (1) {
+  while (!sigterm) {
     
     len = sizeof(client);
     sock = accept(sock0, (struct sockaddr *)&client, &len);
@@ -63,7 +83,8 @@ int main()
     recv(sock, (void *)recvBuffer, sizeof(char)*256, 0);
 
     //受信したデータを表示
-    printf("recvData = %s\n", recvBuffer);
+    sprintf(strBuffer, "recvData = %s\n", recvBuffer);
+    syslog(LOG_NOTICE,strBuffer);
     
     std::string jsonStr(recvBuffer);
 
@@ -75,9 +96,9 @@ int main()
 
     std::string keyIntMotor("MotorNumber");
     int valueMotor = json->readDouble(jsonStr,keyIntMotor);
-
-    printf("motorNumber=%d mode=%d Voltage=%f\n",valueMotor,valueInt,valueDouble);
-
+    sprintf(strBuffer,"motorNumber=%d mode=%d Voltage=%f\n",valueMotor,valueInt,valueDouble);
+    syslog(LOG_NOTICE,strBuffer);
+    
     
     //送信データをセット
     memcpy(sendBuffer, "Data OK!\n", 256);
@@ -102,15 +123,14 @@ int main()
     }
     //モータードライブ実行
     motor->motorDrive(valueMotor,modeDrive,valueDouble);
-
-    
-    
   }
 
   //ソケットクローズ
   close(sock0);
 
-  printf( "Close socket...\n" );
+  //printf( "Close socket...\n" );
+  syslog(LOG_NOTICE,"Close socket...\n");
+    
   delete json;
   
   return 0;
