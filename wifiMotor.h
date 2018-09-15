@@ -13,5 +13,5 @@
 #include "daemonize.h"
 
 #define SOCKET_PORT 2001//受信ポート番号の指定
-
+#define TANK_ID "0" //戦車ごとに割り当てる数値
 #endif

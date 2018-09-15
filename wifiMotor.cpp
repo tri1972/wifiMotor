@@ -95,33 +95,41 @@ int main()
 
     std::string keyIntMotor("MotorNumber");
     int valueMotor = json->readDouble(jsonStr,keyIntMotor);
-    sprintf(strBuffer,"motorNumber=%d mode=%d Voltage=%f\n",valueMotor,valueInt,valueDouble);
+    sprintf(strBuffer,"motorNumber=%d mode=%d Voltag=%f\n",valueMotor,valueInt,valueDouble);
     syslog(LOG_NOTICE,strBuffer);
-    
-    
-    //送信データをセット
-    memcpy(sendBuffer, "Data OK!\n", 256);
+     
+    if(valueInt==4){
+      char sendJson[256];
+      sprintf(sendJson,"{ \"echoTankID\":%s }\n",TANK_ID);      
+      syslog(LOG_NOTICE,sendJson);
+      //データ送信送信
+      memcpy(sendBuffer, sendJson, 256);
+      send(sock, sendBuffer, sizeof(char)*strlen(sendBuffer), 0);
+    }else{
+      //データ送信送信
+      memcpy(sendBuffer, "sendOK!!\n", 256);
+      send(sock, sendBuffer, sizeof(char)*strlen(sendBuffer), 0);
 
-    //データ送信送信
-    send(sock, sendBuffer, sizeof(char)*strlen(sendBuffer), 0);
-    enum DriveMode modeDrive;
+      enum DriveMode modeDrive;
 
-    switch(valueInt){
-    case 0:
-      modeDrive=Stanby;
-      break;
-    case 1:
-      modeDrive=PositiveDrive;
-      break;
-    case 3:
-      modeDrive=NegativeDrive;
-      break;
-    case 2:
-      modeDrive=Break;
-      break;
-    }
+      switch(valueInt){
+	case 0:
+	  modeDrive=Stanby;
+	  break;
+      case 1:
+	modeDrive=PositiveDrive;
+	break;
+      case 3:
+	modeDrive=NegativeDrive;
+	break;
+      case 2:
+	modeDrive=Break;
+	break;
+	}
+
     //モータードライブ実行
-    motor->motorDrive(valueMotor,modeDrive,valueDouble);
+      motor->motorDrive(valueMotor,modeDrive,valueDouble);
+      }
   }
 
   //ソケットクローズ
