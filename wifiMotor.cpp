@@ -7,6 +7,7 @@ int main()
 {
   jsonReader * json = new jsonReader();
   lib_drv8830 * motor=new lib_drv8830();
+  lib_motorServo * servoMotor=new lib_motorServo();
   
   int sock0;
   struct sockaddr_in addr;
@@ -110,26 +111,44 @@ int main()
       memcpy(sendBuffer, "sendOK!!\n", 256);
       send(sock, sendBuffer, sizeof(char)*strlen(sendBuffer), 0);
 
-      enum DriveMode modeDrive;
+      if(valueMotor<2){
+	enum DriveMode modeDrive;
 
-      switch(valueInt){
-	case 0:
-	  modeDrive=Stanby;
-	  break;
-      case 1:
-	modeDrive=PositiveDrive;
-	break;
-      case 3:
-	modeDrive=NegativeDrive;
-	break;
-      case 2:
-	modeDrive=Break;
-	break;
+	switch(valueInt){
+	  case 0:
+	   modeDrive=Stanby;
+	   break;
+	  case 1:
+	    modeDrive=PositiveDrive;
+	    break;
+	  case 3:
+	    modeDrive=NegativeDrive;
+	    break;
+	  case 2:
+	    modeDrive=Break;
+	    break;
 	}
+	//モータードライブ実行
+	motor->motorDrive(valueMotor,modeDrive,valueDouble);
+      }else{
+	enum lib_motorServo::DriveMode modeDrive;
 
-    //モータードライブ実行
-      motor->motorDrive(valueMotor,modeDrive,valueDouble);
+	switch(valueInt){
+	  case 0:
+	   modeDrive=lib_motorServo::Stop;
+	   break;
+	  case 1:
+	    modeDrive=lib_motorServo::PositiveDrive;
+	    break;
+	  case 2:
+	    modeDrive=lib_motorServo::NegativeDrive;
+	    break;
+	}
+	
+	//モーターナンバーが３の時はサーボモータの動作実行
+	servoMotor->motorDrive(modeDrive,valueDouble);
       }
+    }
   }
 
   //ソケットクローズ

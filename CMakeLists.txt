@@ -46,6 +46,10 @@ include_directories ("${PROJECT_SOURCE_DIR}/daemonize")
 add_subdirectory (daemonize)
 set (EXTRA_LIBS ${EXTRA_LIBS} daemonizeFunctions)
 
+include_directories ("${PROJECT_SOURCE_DIR}/motorServo")
+add_subdirectory(motorServo)
+set (EXTRA_LIBS ${EXTRA_LIBS} motorServoFunctions)
+
 target_link_libraries(wifiMotor
   wiringPi
   wiringPiDev
@@ -64,3 +68,5 @@ install (FILES "${PROJECT_SOURCE_DIR}/picojson/picojson.h"
   DESTINATION include)
 install (FILES "${PROJECT_SOURCE_DIR}/wifiMotor.service"
   DESTINATION /etc/systemd/system/)
+install (FILES "${PROJECT_SOURCE_DIR}/motorServo/lib_motorServo.h"
+  DESTINATION include)
