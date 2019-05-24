@@ -134,18 +134,18 @@ int main()
 	enum lib_motorServo::DriveMode modeDrive;
 
 	switch(valueInt){
-	  case 0:
-	   modeDrive=lib_motorServo::Stop;
-	   break;
 	  case 1:
 	    modeDrive=lib_motorServo::PositiveDrive;
 	    break;
-	  case 2:
+	  case 3:
 	    modeDrive=lib_motorServo::NegativeDrive;
 	    break;
+	  case 2:
+	    modeDrive=lib_motorServo::Stop;
+	    break;
 	}
-	
 	//モーターナンバーが３の時はサーボモータの動作実行
+	//servoMotor->motorDrive(valueInt,valueDouble);
 	servoMotor->motorDrive(modeDrive,valueDouble);
       }
     }

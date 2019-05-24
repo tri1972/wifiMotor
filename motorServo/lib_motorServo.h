@@ -1,8 +1,10 @@
 #ifndef LIB_MOTOR_SERVO
 #define LIB_MOTOR_SERVO
 
+#include <syslog.h>
 #include <wiringPi.h>
 #include <wiringPiSPI.h>
+#include <stdio.h>
 
 #define MAXSERVOVALUE 115
 #define MINSERVOVALUE 24
@@ -20,7 +22,8 @@ class lib_motorServo{
   };
 
   lib_motorServo();
-  int motorDrive(enum DriveMode driveSet,double speed);
+  int motorDrive(enum lib_motorServo::DriveMode driveSet,double speed);
+  int motorDrive(int driveSet,double speed);
   ~lib_motorServo();
  private:
   int rotationMotor(double);
